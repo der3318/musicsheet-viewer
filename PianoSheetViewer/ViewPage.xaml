@@ -1,0 +1,83 @@
+﻿<Page
+    x:Class="PianoSheetViewer.ViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PianoSheetViewer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel x:Name="TitlePanel" Orientation="Horizontal">
+            <TextBlock x:Name="TitleTextBlock" Text="{x:Bind pianoSheetInfo.Name, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Margin="96,0,0,24" />
+        </StackPanel>
+        <CommandBar
+            x:Name="CommandBar"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.AlignTopWithPanel="True"
+            OverflowButtonVisibility="Collapsed"
+            DefaultLabelPosition="Right">
+        </CommandBar>
+        <SplitView
+            DisplayMode="Inline"
+            PanePlacement="Right"
+            RelativePanel.Below="CommandBar"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.AlignBottomWithPanel="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ScrollViewer
+                    x:Name="SheetScroller1"
+                    ZoomMode="Enabled"
+                    HorizontalScrollMode="Auto"
+                    HorizontalScrollBarVisibility="Hidden"
+                    VerticalScrollBarVisibility="Hidden"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Grid.Column ="0">
+                    <Rectangle x:Name="ScrollerRect1" x:Load="True" Tapped="OnScreenTapped" Width="{x:Bind pianoSheetInfo.Width, Mode=OneWay}" Height="{x:Bind pianoSheetInfo.Height, Mode=OneWay}">
+                        <Rectangle.Fill>
+                            <local:LoadedImageBrush x:Name="EffectsBrush1"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </ScrollViewer>
+                <ScrollViewer
+                    x:Name="SheetScroller2"
+                    ZoomMode="Enabled"
+                    HorizontalScrollMode="Auto"
+                    HorizontalScrollBarVisibility="Hidden"
+                    VerticalScrollBarVisibility="Hidden"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Grid.Column ="1">
+                    <Rectangle x:Name="ScrollerRect2" x:Load="True" Tapped="OnScreenTapped" Width="{x:Bind pianoSheetInfo.Width, Mode=OneWay}" Height="{x:Bind pianoSheetInfo.Height, Mode=OneWay}">
+                        <Rectangle.Fill>
+                            <local:LoadedImageBrush x:Name="EffectsBrush2"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </ScrollViewer>
+                <ScrollViewer
+                    x:Name="SheetScroller3"
+                    ZoomMode="Enabled"
+                    HorizontalScrollMode="Auto"
+                    HorizontalScrollBarVisibility="Hidden"
+                    VerticalScrollBarVisibility="Hidden"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Grid.Column ="2">
+                    <Rectangle x:Name="ScrollerRect3" x:Load="True" Tapped="OnScreenTapped" Width="{x:Bind pianoSheetInfo.Width, Mode=OneWay}" Height="{x:Bind pianoSheetInfo.Height, Mode=OneWay}">
+                        <Rectangle.Fill>
+                            <local:LoadedImageBrush x:Name="EffectsBrush3"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </ScrollViewer>
+            </Grid>
+        </SplitView>
+    </RelativePanel>
+</Page>

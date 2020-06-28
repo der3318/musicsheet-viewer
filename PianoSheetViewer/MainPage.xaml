@@ -1,0 +1,93 @@
+﻿<Page
+    x:Name="Page"
+    x:Class="PianoSheetViewer.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PianoSheetViewer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerikInput="using:Telerik.UI.Xaml.Controls.Input"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    mc:Ignorable="d"
+    NavigationCacheMode="Enabled"
+    SizeChanged="{x:Bind DetermineItemSize}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <x:Int32 x:Key="ItemMarginValue">8</x:Int32>
+        <Thickness x:Key="ItemMargin">8</Thickness>
+        <Flyout x:Key="ZoomFlyout">
+            <Slider
+                x:Name="ZoomSlider"
+                Width="100"
+                Minimum="180"
+                Maximum="540"
+                Value="270"
+                Margin="0,5,0,0"
+                TickFrequency="90"
+                SnapsTo="Ticks"
+                ValueChanged="{x:Bind DetermineItemSize}" />
+        </Flyout>
+        <ItemsPanelTemplate x:Key="ItemsPanelTemplate">
+            <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center" />
+        </ItemsPanelTemplate>
+        <DataTemplate x:Key="DefaultItemTemplate" x:DataType="local:PianoSheetInfo">
+            <Grid Height="{Binding ItemSize, ElementName=Page}" Width="{Binding ItemSize, ElementName=Page}" Margin="{StaticResource ItemMargin}">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Image x:Name="ItemImage" Stretch="Uniform" Opacity="0" />
+                <StackPanel Orientation="Vertical" Grid.Row="1">
+                    <TextBlock Text="{x:Bind Name, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="{x:Bind FileType}" HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
+                    </StackPanel>
+                    <telerikInput:RadRating Value="{x:Bind NumberOfPages, Mode=OneWay}" IsReadOnly="True">
+                        <telerikInput:RadRating.FilledIconContentTemplate>
+                            <DataTemplate>
+                                <SymbolIcon Symbol="Page" Foreground="White" />
+                            </DataTemplate>
+                        </telerikInput:RadRating.FilledIconContentTemplate>
+                        <telerikInput:RadRating.EmptyIconContentTemplate>
+                            <DataTemplate>
+                                <SymbolIcon Symbol="Page2" Foreground="White" />
+                            </DataTemplate>
+                        </telerikInput:RadRating.EmptyIconContentTemplate>
+                    </telerikInput:RadRating>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        <Style x:Key="DefaultItemContainerStyle" TargetType="GridViewItem">
+            <Setter Property="Background" Value="Gray" />
+            <Setter Property="Margin" Value="{StaticResource ItemMargin}" />
+        </Style>
+    </Page.Resources>
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock x:Name="TitleTextBlock" Text="🎹 Piano Sheets Gallery" Style="{StaticResource TitleTextBlockStyle}" Margin="24,0,0,24" />
+        <CommandBar
+            x:Name="CommandBar"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.AlignBottomWithPanel="True"
+            OverflowButtonVisibility="Collapsed"
+            DefaultLabelPosition="Right">
+            <AppBarButton Icon="Zoom" Label="Zoom" Flyout="{StaticResource ZoomFlyout}" />
+        </CommandBar>
+        <GridView 
+            x:Name="SheetGridView"
+            ContainerContentChanging="ContainerContentChanging"
+            animations:ReorderGridAnimation.Duration="400"
+            Margin="0,0,0,8"
+            ItemClick="OnSheetClick"
+            IsItemClickEnabled="True"
+            ItemsSource="{x:Bind PianoSheets, Mode=OneWay}"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.Below="TitleTextBlock"
+            Loaded="{x:Bind StartConnectedAnimationForBackNavigation}"
+            ItemsPanel="{StaticResource ItemsPanelTemplate}"
+            ItemTemplate="{StaticResource DefaultItemTemplate}"
+            ItemContainerStyle="{StaticResource DefaultItemContainerStyle}">
+        </GridView>
+    </RelativePanel>
+</Page>
