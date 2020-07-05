@@ -213,7 +213,6 @@ namespace PianoSheetViewer
                 _surface.Dispose();
                 _surface = null;
             }
-
             if (CompositionBrush != null)
             {
                 CompositionBrush.Dispose();

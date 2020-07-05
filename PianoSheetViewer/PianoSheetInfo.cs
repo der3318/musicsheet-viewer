@@ -43,15 +43,6 @@ namespace PianoSheetViewer
             }
         }
 
-        public void AddPage(StorageFile pageFile)
-        {
-            if (PageFiles is null)
-            {
-                return;
-            }
-            PageFiles.Add(pageFile);
-        }
-
         public async Task<BitmapImage> GetImageThumbnailAsync()
         {
             var thumbnail = await CoverFile.GetThumbnailAsync(ThumbnailMode.PicturesView);

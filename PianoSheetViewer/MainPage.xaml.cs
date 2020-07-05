@@ -16,6 +16,7 @@ using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
@@ -26,35 +27,38 @@ namespace PianoSheetViewer
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private PianoSheetInfo persistedItem;
-        private StorageFolder searchFolder;
-        private StorageFolder temporaryFolder;
+        
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<PianoSheetInfo> PianoSheets { get; }
-        public event PropertyChangedEventHandler PropertyChanged;
+        
+        public string SearchFolderPath
+        {
+            get => _searchFolderPath;
+            set
+            {
+                if (_searchFolderPath != value)
+                {
+                    _searchFolderPath = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SearchFolderPath)));
+                }
+            }
+        }
+        private string _searchFolderPath;
 
         public MainPage()
         {
             this.InitializeComponent();
-            searchFolder = Windows.Storage.KnownFolders.PicturesLibrary;
             PianoSheets = new ObservableCollection<PianoSheetInfo>();
         }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = Colors.Black;
             ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
-            if (PianoSheets.Count == 0)
-            {
-                temporaryFolder = await searchFolder.CreateFolderAsync("PianoSheetViewer", CreationCollisionOption.ReplaceExisting);
-                FolderPicker folderPicker = new FolderPicker { SuggestedStartLocation = PickerLocationId.ComputerFolder };
-                folderPicker.FileTypeFilter.Add("*");
-                searchFolder = await folderPicker.PickSingleFolderAsync();
-                await ConvertPortableDocumentFormatFilesAsync();
-                await GetPianoSheetsAsync(false);
-                await GetPianoSheetsAsync(true);
-            }
+            SearchFolderPath = "Browse...";
             base.OnNavigatedTo(e);
         }
 
@@ -77,7 +81,28 @@ namespace PianoSheetViewer
             this.Frame.Navigate(typeof(ViewPage), persistedItem);
         }
 
-        private async Task ConvertPortableDocumentFormatFilesAsync()
+        private async void OnSearchFolderClick(object sender, RoutedEventArgs e)
+        {
+            FolderPicker folderPicker = new FolderPicker { SuggestedStartLocation = PickerLocationId.ComputerFolder };
+            folderPicker.FileTypeFilter.Add("*");
+            StorageFolder folderPicked = await folderPicker.PickSingleFolderAsync();
+            if (folderPicked != null)
+            {
+                UpdatePianoSheetsFromFolder(folderPicked);
+            }
+        }
+
+        private async void UpdatePianoSheetsFromFolder(StorageFolder searchFolder)
+        {
+            PianoSheets.Clear();
+            SearchFolderPath = searchFolder.Path.Length > 0 ? searchFolder.Path : searchFolder.Name;
+            StorageFolder temporaryFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("PianoSheetViewer", CreationCollisionOption.ReplaceExisting);
+            await ConvertPortableDocumentFormatFilesAsync(searchFolder, temporaryFolder);
+            await GetPianoSheetsAsync(true, temporaryFolder);
+            await GetPianoSheetsAsync(false, searchFolder);
+        }
+
+        private async Task ConvertPortableDocumentFormatFilesAsync(StorageFolder searchFolder, StorageFolder temporaryFolder)
         {
             QueryOptions options = new QueryOptions();
             options.FolderDepth = FolderDepth.Shallow;
@@ -116,18 +141,14 @@ namespace PianoSheetViewer
             }
         }
 
-        private async Task GetPianoSheetsAsync(bool findInSearchFolder)
+        private async Task GetPianoSheetsAsync(bool isPortableDocumentFormatFile, StorageFolder storageFolder)
         {
             QueryOptions options = new QueryOptions();
             options.FolderDepth = FolderDepth.Deep;
             options.FileTypeFilter.Add(".jpg");
             options.FileTypeFilter.Add(".png");
             options.FileTypeFilter.Add(".gif");
-            StorageFileQueryResult query = temporaryFolder.CreateFileQueryWithOptions(options);
-            if (findInSearchFolder)
-            {
-                query = searchFolder.CreateFileQueryWithOptions(options);
-            }
+            StorageFileQueryResult query = storageFolder.CreateFileQueryWithOptions(options);
             IReadOnlyList<StorageFile> imageFiles = await query.GetFilesAsync();
             Dictionary<string, List<StorageFile>> parentFolderPathToImages = new Dictionary<string, List<StorageFile>>();
             foreach (StorageFile file in imageFiles)
@@ -151,10 +172,10 @@ namespace PianoSheetViewer
                 {
                     name = parentFolderPathSplited[parentFolderPathSplited.Length - 2];
                 }
-                string fileType = String.Format("PDF Document 📄×{0}", kvp.Value.Count);
-                if (findInSearchFolder)
+                string fileType = String.Format("Images 📄×{0}", kvp.Value.Count); 
+                if (isPortableDocumentFormatFile)
                 {
-                    fileType = String.Format("Images 📄×{0}", kvp.Value.Count);
+                    fileType = String.Format("PDF Document 📄×{0}", kvp.Value.Count);
                 }
                 ImageProperties properties = await kvp.Value.First().Properties.GetImagePropertiesAsync();
                 PianoSheetInfo pianoSheetInfo = new PianoSheetInfo(kvp.Value.First(), kvp.Value, name, fileType, properties);

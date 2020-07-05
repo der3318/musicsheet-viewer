@@ -71,13 +71,14 @@
             RelativePanel.AlignBottomWithPanel="True"
             OverflowButtonVisibility="Collapsed"
             DefaultLabelPosition="Right">
-            <AppBarButton Icon="Zoom" Label="Zoom" Flyout="{StaticResource ZoomFlyout}" />
+            <AppBarButton Icon="Scan" Label="{x:Bind SearchFolderPath, Mode=OneWay}" Click="OnSearchFolderClick" />
+            <AppBarButton Icon="Zoom" Label="Item Size" Flyout="{StaticResource ZoomFlyout}" />
         </CommandBar>
         <GridView 
             x:Name="SheetGridView"
             ContainerContentChanging="ContainerContentChanging"
             animations:ReorderGridAnimation.Duration="400"
-            Margin="0,0,0,8"
+            Margin="0,0,0,96"
             ItemClick="OnSheetClick"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind PianoSheets, Mode=OneWay}"
