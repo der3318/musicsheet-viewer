@@ -11,18 +11,10 @@
         <StackPanel x:Name="TitlePanel" Orientation="Horizontal">
             <TextBlock x:Name="TitleTextBlock" Text="{x:Bind pianoSheetInfo.Name, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Margin="96,0,0,24" />
         </StackPanel>
-        <CommandBar
-            x:Name="CommandBar"
-            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.AlignTopWithPanel="True"
-            OverflowButtonVisibility="Collapsed"
-            DefaultLabelPosition="Right">
-        </CommandBar>
         <SplitView
             DisplayMode="Inline"
             PanePlacement="Right"
-            RelativePanel.Below="CommandBar"
+            RelativePanel.Below="TitlePanel"
             RelativePanel.AlignLeftWithPanel="True"
             RelativePanel.AlignRightWithPanel="True"
             RelativePanel.AlignBottomWithPanel="True">

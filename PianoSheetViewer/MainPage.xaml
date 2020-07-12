@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:telerikInput="using:Telerik.UI.Xaml.Controls.Input"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     SizeChanged="{x:Bind DetermineItemSize}"
@@ -90,5 +91,16 @@
             ItemTemplate="{StaticResource DefaultItemTemplate}"
             ItemContainerStyle="{StaticResource DefaultItemContainerStyle}">
         </GridView>
+        <controls:Loading x:Name="LoadingControl" 
+            RelativePanel.AlignHorizontalCenterWithPanel="True"
+            RelativePanel.AlignVerticalCenterWithPanel="True"
+            IsLoading="{x:Bind IsBusy, Mode=OneWay}">
+            <StackPanel Orientation="Horizontal" Padding="12">
+                <Grid Margin="0,0,8,0">
+                    <ProgressRing IsActive="True" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" />
+                </Grid>
+                <TextBlock Text="Loading..." VerticalAlignment="Center" />
+            </StackPanel>
+        </controls:Loading>
     </RelativePanel>
 </Page>

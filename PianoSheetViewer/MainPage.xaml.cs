@@ -27,29 +27,14 @@ namespace PianoSheetViewer
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private PianoSheetInfo persistedItem;
-        
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public ObservableCollection<PianoSheetInfo> PianoSheets { get; }
-        
-        public string SearchFolderPath
-        {
-            get => _searchFolderPath;
-            set
-            {
-                if (_searchFolderPath != value)
-                {
-                    _searchFolderPath = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SearchFolderPath)));
-                }
-            }
-        }
-        private string _searchFolderPath;
 
         public MainPage()
         {
             this.InitializeComponent();
             PianoSheets = new ObservableCollection<PianoSheetInfo>();
+            SearchFolderPath = "Browse...";
+            IsBusy = false;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -58,7 +43,6 @@ namespace PianoSheetViewer
             ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = Colors.Black;
             ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
-            SearchFolderPath = "Browse...";
             base.OnNavigatedTo(e);
         }
 
@@ -88,7 +72,10 @@ namespace PianoSheetViewer
             StorageFolder folderPicked = await folderPicker.PickSingleFolderAsync();
             if (folderPicked != null)
             {
+                IsBusy = true;
                 UpdatePianoSheetsFromFolder(folderPicked);
+                await Task.Delay(5000);
+                IsBusy = false;
             }
         }
 
@@ -183,20 +170,6 @@ namespace PianoSheetViewer
             }
         }
 
-        public double ItemSize
-        {
-            get => _itemSize;
-            set
-            {
-                if (_itemSize != value)
-                {
-                    _itemSize = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ItemSize)));
-                }
-            }
-        }
-        private double _itemSize;
-
         private void DetermineItemSize()
         {
             ItemSize = ZoomSlider.Value;
@@ -237,5 +210,49 @@ namespace PianoSheetViewer
                 }
             }
         }
+
+        public ObservableCollection<PianoSheetInfo> PianoSheets { get; }
+
+        public string SearchFolderPath
+        {
+            get => _searchFolderPath;
+            set
+            {
+                if (_searchFolderPath != value)
+                {
+                    _searchFolderPath = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SearchFolderPath)));
+                }
+            }
+        }
+        private string _searchFolderPath;
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                if (_isBusy != value)
+                {
+                    _isBusy = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsBusy)));
+                }
+            }
+        }
+        private bool _isBusy;
+
+        public double ItemSize
+        {
+            get => _itemSize;
+            set
+            {
+                if (_itemSize != value)
+                {
+                    _itemSize = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ItemSize)));
+                }
+            }
+        }
+        private double _itemSize;
     }
 }

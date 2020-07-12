@@ -9,16 +9,6 @@ namespace PianoSheetViewer
 {
     public class PianoSheetInfo
     {
-        public PianoSheetInfo(StorageFile coverFile, List<StorageFile> pageFiles, string name, string fileType, ImageProperties properties)
-        {
-            CoverFile = coverFile;
-            PageFiles = pageFiles;
-            Name = name;
-            FileType = fileType;
-            Width = properties.Width;
-            Height = properties.Height;
-        }
-
         public StorageFile CoverFile { get; }
 
         public List<StorageFile> PageFiles { get; }
@@ -41,6 +31,16 @@ namespace PianoSheetViewer
                 }
                 return PageFiles.Count;
             }
+        }
+
+        public PianoSheetInfo(StorageFile coverFile, List<StorageFile> pageFiles, string name, string fileType, ImageProperties properties)
+        {
+            CoverFile = coverFile;
+            PageFiles = pageFiles;
+            Name = name;
+            FileType = fileType;
+            Width = properties.Width;
+            Height = properties.Height;
         }
 
         public async Task<BitmapImage> GetImageThumbnailAsync()

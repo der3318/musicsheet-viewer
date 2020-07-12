@@ -18,8 +18,16 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>7959D1E0223A5759C58165385F6E8B4605268B93</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>98C8A6846784FF00DF0E41AC6421308744B7E3BE</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -137,6 +145,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Square44x44Logo.targetsize-48_altform-unplated.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -167,11 +176,15 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
       <Version>6.1.0</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>6.1.0</Version>
+    </PackageReference>
     <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
       <Version>1.0.1.9</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="DerChien.pfx" />
     <None Include="PianoSheetViewer_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>

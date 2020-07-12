@@ -9,7 +9,7 @@
   <Identity
     Name="45937a97-54ad-4259-8287-ef6fbd575798"
     Publisher="CN=Der Chien"
-    Version="1.0.1.0" />
+    Version="1.0.2.0" />
 
   <mp:PhoneIdentity PhoneProductId="45937a97-54ad-4259-8287-ef6fbd575798" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -44,7 +44,6 @@
   </Applications>
 
   <Capabilities>
-    <Capability Name="internetClient" />
     <uap:Capability Name="picturesLibrary"/>
   </Capabilities>
 </Package>
