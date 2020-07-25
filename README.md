@@ -8,9 +8,9 @@
 
 A UWP (Universal Windows Platform) based application that provides an user-friendly interface to view piano sheets on Windows tablets.
 
-| ![Imgur](https://i.imgur.com/VNuRKbL.gif) |
+| <img src="/demo.gif?raw=true" width="600px"> |
 | :-: |
-| ![Imgur](https://i.imgur.com/n7NJhki.jpg) |
+| <img src="https://i.imgur.com/n7NJhki.jpg" width="600px"> |
 
 
 ### 🗨 Features
@@ -40,9 +40,9 @@ A UWP (Universal Windows Platform) based application that provides an user-frien
 | #5 | download released installer - [PianoSheetViewer.msixbundle](https://github.com/der3318/musicsheet-viewer/releases/download/v1.0.2.0/PianoSheetViewer.msixbundle) |
 | #6 | double click to install the app |
 
-| ![Imgur](https://i.imgur.com/LQMrwOq.png) |
+| <img src="https://i.imgur.com/LQMrwOq.png" width="600px"> |
 | :-: |
-| ![Imgur](https://i.imgur.com/1HPGv5F.png) |
+| <img src="https://i.imgur.com/1HPGv5F.png" width="600px"> |
 
 
 ### 🗑️ Uninstallation
