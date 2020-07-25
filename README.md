@@ -6,7 +6,11 @@
 ![size](https://img.shields.io/badge/size-32.2%20MB-yellow.svg)
 ![license](https://img.shields.io/badge/license-MIT-blueviolet.svg)
 
-An UWP (Universal Windows Platform) based application that provides an user-friendly interface to view piano sheets on Windows tablets.
+A UWP (Universal Windows Platform) based application that provides an user-friendly interface to view piano sheets on Windows tablets.
+
+| ![Imgur](https://i.imgur.com/VNuRKbL.gif) |
+| :-: |
+| ![Imgur](https://i.imgur.com/n7NJhki.jpg) |
 
 
 ### 🗨 Features
@@ -51,7 +55,7 @@ An UWP (Universal Windows Platform) based application that provides an user-frie
 ### 📄 Build and Redistribution
 | Step | Description |
 | :-: | :- |
-| #1 | clone and repository and open using [Visual Studio 2019](https://visualstudio.microsoft.com/) |
+| #1 | clone the repository and open using [Visual Studio 2019](https://visualstudio.microsoft.com/) |
 | #2 | modify the source to meet customized requirements |
 | #3 | generate self-signed certificate |
 
@@ -60,7 +64,7 @@ New-SelfSignedCertificate -Type Custom -Subject "CN=[YOUR NAME OR COMPANY]" -Key
 ```
 | Step | Description |
 | :-: | :- |
-| #4 | <kbd>Windows+R</kbd> and input <kbd>certmgr.msc</kbd> to view the certificate thumpprint |
+| #4 | <kbd>Windows+R</kbd> and input <kbd>certmgr.msc</kbd> to view the certificate thumbprint |
 | #5 | set password and export as PFX file |
 
 ```powershell
@@ -72,5 +76,5 @@ Export-PfxCertificate -cert "Cert:\CurrentUser\My\[YOUR THUMBPRINT]" -FilePath c
 | :-: | :- |
 | #6 | open <kbd>Package.appxmanifest</kbd> in VS and select <kbd>certificate.pfx</kbd> in package |
 | #7 | type password to use the certificate |
-| #8 | build, publist and redistribute the certificate and installer under <kbd>AppPackages/*</kbd> |
+| #8 | build, publish and redistribute the installer as well as the certificate under <kbd>AppPackages/*</kbd> |
 
