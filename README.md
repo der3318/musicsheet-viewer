@@ -6,7 +6,7 @@
 ![size](https://img.shields.io/badge/size-32.2%20MB-yellow.svg)
 ![license](https://img.shields.io/badge/license-MIT-blueviolet.svg)
 
-A UWP (Universal Windows Platform) based application that provides an user-friendly interface to view piano sheets on Windows tablets.
+A UWP (Universal Windows Platform) based application that provides a user-friendly interface to view piano sheets on Windows tablets.
 
 | <img src="/demo.gif?raw=true" width="600px"> |
 | :-: |
