@@ -72,21 +72,21 @@ namespace PianoSheetViewer
             StorageFolder folderPicked = await folderPicker.PickSingleFolderAsync();
             if (folderPicked != null)
             {
-                IsBusy = true;
                 UpdatePianoSheetsFromFolder(folderPicked);
-                await Task.Delay(5000);
-                IsBusy = false;
             }
         }
 
         private async void UpdatePianoSheetsFromFolder(StorageFolder searchFolder)
         {
+            IsBusy = true;
             PianoSheets.Clear();
             SearchFolderPath = searchFolder.Path.Length > 0 ? searchFolder.Path : searchFolder.Name;
             StorageFolder temporaryFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("PianoSheetViewer", CreationCollisionOption.ReplaceExisting);
             await ConvertPortableDocumentFormatFilesAsync(searchFolder, temporaryFolder);
             await GetPianoSheetsAsync(true, temporaryFolder);
             await GetPianoSheetsAsync(false, searchFolder);
+            await Task.Delay(1000);
+            IsBusy = false;
         }
 
         private async Task ConvertPortableDocumentFormatFilesAsync(StorageFolder searchFolder, StorageFolder temporaryFolder)
