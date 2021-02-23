@@ -1,6 +1,6 @@
 ## 🎵 Music Sheet Viewer
 
-![ver](https://img.shields.io/badge/version-1.0.2-blue.svg)
+![ver](https://img.shields.io/badge/version-1.0.3-blue.svg)
 ![windows](https://img.shields.io/badge/windows-10.0.18362.0-green.svg)
 ![flavor](https://img.shields.io/badge/flavor-x86/x64/arm-brightgreen.svg)
 ![size](https://img.shields.io/badge/size-32.2%20MB-yellow.svg)
@@ -34,10 +34,10 @@ A UWP (Universal Windows Platform) based application that provides a user-friend
 | Step | Description |
 | :-: | :- |
 | #1 | go through <kbd>ms-settings:developers</kbd> and enable developer mode |
-| #2 | download released certificate - [DerChien.cer](https://github.com/der3318/musicsheet-viewer/releases/download/v1.0.2.0/DerChien.cer) |
+| #2 | download released certificate - [DerChien.cer](https://github.com/der3318/musicsheet-viewer/releases/download/v1.0.3.0/DerChien.cer) |
 | #3 | right click to import the self-signed certificate |
 | #4 | choose <kbd>Local Machine</kbd> and <kbd>Trusted Root Certification Authorities</kbd> |
-| #5 | download released installer - [PianoSheetViewer.msixbundle](https://github.com/der3318/musicsheet-viewer/releases/download/v1.0.2.0/PianoSheetViewer.msixbundle) |
+| #5 | download released installer - [PianoSheetViewer.msixbundle](https://github.com/der3318/musicsheet-viewer/releases/download/v1.0.3.0/PianoSheetViewer.msixbundle) |
 | #6 | double click to install the app |
 
 | <img src="https://i.imgur.com/LQMrwOq.png" width="600px"> |

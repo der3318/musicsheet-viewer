@@ -99,7 +99,7 @@
                 <Grid Margin="0,0,8,0">
                     <ProgressRing IsActive="True" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" />
                 </Grid>
-                <TextBlock Text="Loading..." VerticalAlignment="Center" />
+                <TextBlock Text="{x:Bind LoadingMsg, Mode=OneWay}" VerticalAlignment="Center" />
             </StackPanel>
         </controls:Loading>
     </RelativePanel>

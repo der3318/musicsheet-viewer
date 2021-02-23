@@ -28,6 +28,8 @@ namespace PianoSheetViewer
     {
         private PianoSheetInfo persistedItem;
         public event PropertyChangedEventHandler PropertyChanged;
+        
+        private static readonly object _syncIsBusy = new object();
 
         public MainPage()
         {
@@ -35,6 +37,7 @@ namespace PianoSheetViewer
             PianoSheets = new ObservableCollection<PianoSheetInfo>();
             SearchFolderPath = "Browse...";
             IsBusy = false;
+            LoadingMsg = "Loading...";
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -78,7 +81,19 @@ namespace PianoSheetViewer
 
         private async void UpdatePianoSheetsFromFolder(StorageFolder searchFolder)
         {
-            IsBusy = true;
+            lock (_syncIsBusy)
+            {
+                if (IsBusy)
+                {
+                    return;
+                }
+                else
+                {
+                    IsBusy = true;
+                }
+            }
+            
+            LoadingMsg = "Loading...";
             PianoSheets.Clear();
             SearchFolderPath = searchFolder.Path.Length > 0 ? searchFolder.Path : searchFolder.Name;
             StorageFolder temporaryFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("PianoSheetViewer", CreationCollisionOption.ReplaceExisting);
@@ -86,7 +101,11 @@ namespace PianoSheetViewer
             await GetPianoSheetsAsync(true, temporaryFolder);
             await GetPianoSheetsAsync(false, searchFolder);
             await Task.Delay(1000);
-            IsBusy = false;
+
+            lock (_syncIsBusy)
+            {
+                IsBusy = false;
+            }
         }
 
         private async Task ConvertPortableDocumentFormatFilesAsync(StorageFolder searchFolder, StorageFolder temporaryFolder)
@@ -96,7 +115,7 @@ namespace PianoSheetViewer
             options.FileTypeFilter.Add(".pdf");
             StorageFileQueryResult query = searchFolder.CreateFileQueryWithOptions(options);
             IReadOnlyList<StorageFile> pdfFiles = await query.GetFilesAsync();
-            foreach (StorageFile pdfFile in pdfFiles)
+            foreach (var (pdfFile, index) in pdfFiles.Select((file, idx) => (file, idx)))
             {
                 PdfDocument pdfDoc = await PdfDocument.LoadFromFileAsync(pdfFile);
                 for (uint pageIdx = 0U; pageIdx < pdfDoc.PageCount; pageIdx++)
@@ -125,7 +144,12 @@ namespace PianoSheetViewer
                     }
                     catch (Exception) { }
                 }
+                if (pdfFiles.Count > 5)
+                {
+                    LoadingMsg = String.Format("Processing PDF Documents... ({0}/{1})", index + 1, pdfFiles.Count);
+                }
             }
+            LoadingMsg = "Loading...";
         }
 
         private async Task GetPianoSheetsAsync(bool isPortableDocumentFormatFile, StorageFolder storageFolder)
@@ -240,6 +264,20 @@ namespace PianoSheetViewer
             }
         }
         private bool _isBusy;
+
+        public string LoadingMsg
+        {
+            get => _loadingMsg;
+            set
+            {
+                if (_loadingMsg != value)
+                {
+                    _loadingMsg = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LoadingMsg)));
+                }
+            }
+        }
+        private string _loadingMsg;
 
         public double ItemSize
         {
