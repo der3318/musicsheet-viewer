@@ -39,11 +39,11 @@
                 </Grid.RowDefinitions>
                 <Image x:Name="ItemImage" Stretch="Uniform" Opacity="0" />
                 <StackPanel Orientation="Vertical" Grid.Row="1">
-                    <TextBlock Text="{x:Bind Name, Mode=OneWay}" HorizontalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind Name}" HorizontalAlignment="Center" Style="{StaticResource SubtitleTextBlockStyle}" />
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="{x:Bind FileType}" HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
                     </StackPanel>
-                    <telerikInput:RadRating Value="{x:Bind NumberOfPages, Mode=OneWay}" IsReadOnly="True">
+                    <telerikInput:RadRating Value="{x:Bind NumberOfPages}" IsReadOnly="True">
                         <telerikInput:RadRating.FilledIconContentTemplate>
                             <DataTemplate>
                                 <SymbolIcon Symbol="Page" Foreground="White" />

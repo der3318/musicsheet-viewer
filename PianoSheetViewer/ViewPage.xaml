@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel x:Name="TitlePanel" Orientation="Horizontal">
-            <TextBlock x:Name="TitleTextBlock" Text="{x:Bind pianoSheetInfo.Name, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" Margin="96,0,0,24" />
+            <TextBlock x:Name="TitleTextBlock" Text="{x:Bind pianoSheetInfo.Name}" Style="{StaticResource TitleTextBlockStyle}" Margin="96,0,0,24" />
         </StackPanel>
         <SplitView
             DisplayMode="Inline"
@@ -33,7 +33,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Grid.Column ="0">
-                    <Rectangle x:Name="ScrollerRect1" x:Load="True" Tapped="OnScreenTapped" Width="{x:Bind pianoSheetInfo.Width, Mode=OneWay}" Height="{x:Bind pianoSheetInfo.Height, Mode=OneWay}">
+                    <Rectangle x:Name="ScrollerRect1" x:Load="True" Tapped="OnScreenTapped" Width="{x:Bind pianoSheetInfo.Width}" Height="{x:Bind pianoSheetInfo.Height}">
                         <Rectangle.Fill>
                             <local:LoadedImageBrush x:Name="EffectsBrush1"/>
                         </Rectangle.Fill>
@@ -48,7 +48,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Grid.Column ="1">
-                    <Rectangle x:Name="ScrollerRect2" x:Load="True" Tapped="OnScreenTapped" Width="{x:Bind pianoSheetInfo.Width, Mode=OneWay}" Height="{x:Bind pianoSheetInfo.Height, Mode=OneWay}">
+                    <Rectangle x:Name="ScrollerRect2" x:Load="True" Tapped="OnScreenTapped" Width="{x:Bind pianoSheetInfo.Width}" Height="{x:Bind pianoSheetInfo.Height}">
                         <Rectangle.Fill>
                             <local:LoadedImageBrush x:Name="EffectsBrush2"/>
                         </Rectangle.Fill>
@@ -63,7 +63,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Grid.Column ="2">
-                    <Rectangle x:Name="ScrollerRect3" x:Load="True" Tapped="OnScreenTapped" Width="{x:Bind pianoSheetInfo.Width, Mode=OneWay}" Height="{x:Bind pianoSheetInfo.Height, Mode=OneWay}">
+                    <Rectangle x:Name="ScrollerRect3" x:Load="True" Tapped="OnScreenTapped" Width="{x:Bind pianoSheetInfo.Width}" Height="{x:Bind pianoSheetInfo.Height}">
                         <Rectangle.Fill>
                             <local:LoadedImageBrush x:Name="EffectsBrush3"/>
                         </Rectangle.Fill>
