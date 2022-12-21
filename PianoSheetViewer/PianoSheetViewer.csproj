@@ -184,8 +184,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DerChien.pfx" />
-    <None Include="PianoSheetViewer_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

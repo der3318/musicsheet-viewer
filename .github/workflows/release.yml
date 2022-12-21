@@ -1,0 +1,92 @@
+name: UWP App Package Release Builder
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '4-digit version number (without prefix v)'
+        required: true
+        default: '0.0.0.0'
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    env:
+      ArchiveZip: Archive.zip
+      SigningCertificate: AppTemporaryKey.pfx
+      SolutionPath: .\PianoSheetViewer\PianoSheetViewer.sln
+      ProjectDirectory: .\PianoSheetViewer
+
+    steps:
+
+    - name: Configure Pagefile
+      uses: al-cheb/configure-pagefile-action@v1.2
+      with:
+        minimum-size: 32GB
+        maximum-size: 32GB
+        disk-root: "C:"
+
+    - name: Get Tag
+      id: tag
+      uses: dawidd6/action-get-tag@v1
+      if: ${{ github.event.inputs.version == '0.0.0.0' }}
+      with:
+        strip_v: true
+
+    - name: Get Date
+      uses: josStorer/get-current-time@v2.0.2
+      id: date
+      with:
+        format: YYYYMMDD
+        utcOffset: "+08:00"
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.3
+
+    - name: Decode Pfx
+      run: |
+        $pfxCertByte = [System.Convert]::FromBase64String("${{ secrets.PFX_BASE64_ENCODED }}")
+        $currentDirectory = Get-Location
+        $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:ProjectDirectory -AdditionalChildPath $env:SigningCertificate
+        [IO.File]::WriteAllBytes("$certificatePath", $pfxCertByte)
+
+    - name: Build
+      run: msbuild $env:SolutionPath /p:Platform=x86 /p:AppxBundlePlatforms="x86|x64|ARM|ARM64" /p:AppxPackageDir=C:\Package /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.PFX_PASSWORD }} /restore
+      env:
+        AppxBundle: Always
+        BuildMode: SideloadOnly
+        Configuration: Release
+
+    - name: Remove Pfx
+      run: Remove-Item -path ${{ env.ProjectDirectory }}\${{ env.SigningCertificate }}
+
+    - name: Create Archive
+      run: Compress-Archive -Path C:\Package\App_${{ github.event.inputs.version }}_Test\* -DestinationPath C:\Package\${{ env.ArchiveZip }}
+
+    - name: Create Release
+      id: release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.event.inputs.version }}
+        release_name: ${{ steps.date.outputs.formattedTime }}
+        draft: true
+        prerelease: false
+
+    - name: Update Asset
+      id: asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: C:\Package\${{ env.ArchiveZip }}
+        asset_name: ${{ env.ArchiveZip }}
+        asset_content_type: application/zip
