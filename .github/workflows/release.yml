@@ -57,7 +57,7 @@ jobs:
         [IO.File]::WriteAllBytes("$certificatePath", $pfxCertByte)
 
     - name: Build
-      run: msbuild $env:SolutionPath /p:Platform=x86 /p:AppxBundlePlatforms="x86|x64|ARM|ARM64" /p:AppxPackageDir=C:\Package /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.PFX_PASSWORD }} /restore
+      run: msbuild $env:SolutionPath /p:AppxBundlePlatforms="x86|x64|ARM|ARM64" /p:AppxPackageDir=C:\Package /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.PFX_PASSWORD }} /restore
       env:
         AppxBundle: Always
         BuildMode: SideloadOnly
@@ -67,7 +67,7 @@ jobs:
       run: Remove-Item -path ${{ env.ProjectDirectory }}\${{ env.SigningCertificate }}
 
     - name: Create Archive
-      run: Compress-Archive -Path C:\Package\App_${{ github.event.inputs.version }}_Test\* -DestinationPath C:\Package\${{ env.ArchiveZip }}
+      run: Compress-Archive -Path C:\Package\PianoSheetViewer_${{ github.event.inputs.version }}_Test\* -DestinationPath C:\Package\${{ env.ArchiveZip }}
 
     - name: Create Release
       id: release
