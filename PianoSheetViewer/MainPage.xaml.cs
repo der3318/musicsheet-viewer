@@ -117,39 +117,46 @@ namespace PianoSheetViewer
             IReadOnlyList<StorageFile> pdfFiles = await query.GetFilesAsync();
             foreach (var (pdfFile, index) in pdfFiles.Select((file, idx) => (file, idx)))
             {
+                List<Task> pageTaskList = new List<Task>();
+                StorageFolder folderToSave = await temporaryFolder.CreateFolderAsync(pdfFile.Name.Replace(".pdf", ""), CreationCollisionOption.OpenIfExists);
                 PdfDocument pdfDoc = await PdfDocument.LoadFromFileAsync(pdfFile);
                 for (uint pageIdx = 0U; pageIdx < pdfDoc.PageCount; pageIdx++)
                 {
                     PdfPage pdfPage = pdfDoc.GetPage(pageIdx);
-                    SoftwareBitmap buffer;
-                    using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
-                    {
-                        await pdfPage.RenderToStreamAsync(stream);
-                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                        SoftwareBitmap softBitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
-                        SoftwareBitmapSource source = new SoftwareBitmapSource();
-                        await source.SetBitmapAsync(softBitmap);
-                        buffer = softBitmap;
-                    }
-                    try
-                    {
-                        StorageFolder folderToSave = await temporaryFolder.CreateFolderAsync(pdfFile.Name.Replace(".pdf", ""), CreationCollisionOption.OpenIfExists);
-                        StorageFile fileToSave = await folderToSave.CreateFileAsync(pdfFile.Name.Replace(".pdf", "") + "-" + (pageIdx + 1U) + ".jpg");
-                        using (IRandomAccessStream stream = await fileToSave.OpenAsync(FileAccessMode.ReadWrite))
-                        {
-                            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-                            encoder.SetSoftwareBitmap(buffer);
-                            await encoder.FlushAsync();
-                        }
-                    }
-                    catch (Exception) { }
+                    StorageFile fileToSave = await folderToSave.CreateFileAsync(pdfFile.Name.Replace(".pdf", "") + "-" + (pageIdx + 1U) + ".jpg");
+                    pageTaskList.Add(ConvertSinglePageAsync(pdfPage, fileToSave));
                 }
+                await Task.WhenAll(pageTaskList);
                 if (pdfFiles.Count > 5)
                 {
                     LoadingMsg = String.Format("Processing PDF Documents... ({0}/{1})", index + 1, pdfFiles.Count);
                 }
             }
             LoadingMsg = "Loading...";
+        }
+
+        private async Task ConvertSinglePageAsync(PdfPage pdfPage, StorageFile fileToSave)
+        {
+            SoftwareBitmap buffer;
+            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+            {
+                await pdfPage.RenderToStreamAsync(stream);
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                SoftwareBitmap softBitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+                SoftwareBitmapSource source = new SoftwareBitmapSource();
+                await source.SetBitmapAsync(softBitmap);
+                buffer = softBitmap;
+            }
+            try
+            {
+                using (IRandomAccessStream stream = await fileToSave.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                    encoder.SetSoftwareBitmap(buffer);
+                    await encoder.FlushAsync();
+                }
+            }
+            catch (Exception) { }
         }
 
         private async Task GetPianoSheetsAsync(bool isPortableDocumentFormatFile, StorageFolder storageFolder)
