@@ -73,6 +73,8 @@
             OverflowButtonVisibility="Collapsed"
             DefaultLabelPosition="Right">
             <AppBarButton Icon="Scan" Label="{x:Bind SearchFolderPath, Mode=OneWay}" Click="OnSearchFolderClick" />
+            <AppBarButton Icon="Sort" Label="Name" Click="OnNameSortClick" />
+            <AppBarButton Icon="Sort" Label="Type" Click="OnTypeSortClick" />
             <AppBarButton Icon="Zoom" Label="Item Size" Flyout="{StaticResource ZoomFlyout}" />
         </CommandBar>
         <GridView 

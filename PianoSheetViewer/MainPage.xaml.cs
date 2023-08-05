@@ -79,6 +79,64 @@ namespace PianoSheetViewer
             }
         }
 
+        private async void OnNameSortClick(object sender, RoutedEventArgs e)
+        {
+            lock (_syncIsBusy)
+            {
+                if (IsBusy)
+                {
+                    return;
+                }
+                else
+                {
+                    IsBusy = true;
+                }
+            }
+
+            LoadingMsg = "Loading...";
+            List<PianoSheetInfo> sortedSheets = PianoSheets.OrderBy(sheet => sheet.Name).ToList();
+            PianoSheets.Clear();
+            foreach (PianoSheetInfo pianoSheetInfo in sortedSheets)
+            {
+                PianoSheets.Add(pianoSheetInfo);
+                await Task.Delay(100);
+            }
+
+            lock (_syncIsBusy)
+            {
+                IsBusy = false;
+            }
+        }
+
+        private async void OnTypeSortClick(object sender, RoutedEventArgs e)
+        {
+            lock (_syncIsBusy)
+            {
+                if (IsBusy)
+                {
+                    return;
+                }
+                else
+                {
+                    IsBusy = true;
+                }
+            }
+
+            LoadingMsg = "Loading...";
+            List<PianoSheetInfo> sortedSheets = PianoSheets.OrderBy(sheet => sheet.FileType).ToList();
+            PianoSheets.Clear();
+            foreach (PianoSheetInfo pianoSheetInfo in sortedSheets)
+            {
+                PianoSheets.Add(pianoSheetInfo);
+                await Task.Delay(100);
+            }
+
+            lock (_syncIsBusy)
+            {
+                IsBusy = false;
+            }
+        }
+
         private async void UpdatePianoSheetsFromFolder(StorageFolder searchFolder)
         {
             lock (_syncIsBusy)
