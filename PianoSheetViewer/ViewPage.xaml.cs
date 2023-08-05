@@ -81,6 +81,10 @@ namespace PianoSheetViewer
         private async void OnScreenTapped(object sender, TappedRoutedEventArgs e)
         {
             viewPhase += 1;
+            if (viewPhase * 3 >= pianoSheetInfo.NumberOfPages)
+            {
+                viewPhase = 0;
+            }
             await RenderView();
             e.Handled = true;
         }
